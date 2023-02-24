@@ -1,5 +1,7 @@
 package com.mom.calendar.controller;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -49,6 +51,21 @@ public class MomCalendarController {
     }
     
     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+  }
+  
+  @GetMapping("/calendars/{ids}")
+  public ResponseEntity<List<WeeklyCalendar>> getWeeklyCalendars(@PathVariable List<String> ids) {
+    LOGGER.info("Obteniendo calendarios por ids {} ", ids);
+    List<WeeklyCalendar> calendars = new LinkedList<>();
+    for (String id: ids) {
+      Optional<WeeklyCalendar> cal = repository.findById(id);
+      if (cal.isPresent()) {
+        calendars.add(cal.get());
+      }
+    }
+    
+    return new ResponseEntity<>(calendars, HttpStatus.OK);
+    
   }
   
   @DeleteMapping("/{id}")
